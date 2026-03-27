@@ -1,0 +1,9 @@
+{
+  "name": "solana-meme-bot",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "check": "npm run check --workspaces"
+  }
+}
