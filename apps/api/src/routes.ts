@@ -4,6 +4,7 @@ import { state } from "./state.js";
 import { runScanAndScoreCycle } from "./scan.js";
 import { getBacktestResults } from "./backtest.js";
 import { runPaperDecision } from "./engine.js";
+import { prepareAxiomExecution } from "./axiom.js";
 
 function json(res: ServerResponse, status: number, data: unknown) {
   res.statusCode = status;
@@ -92,6 +93,12 @@ export async function handleRoute(req: IncomingMessage, res: ServerResponse, url
     const body = await readBody(req);
     const result = runPaperDecision(body.decision, Number(body.price ?? 0));
     return json(res, result.ok ? 200 : 400, result);
+  }
+
+  if (req.method === "POST" && url.pathname === "/prepare-axiom-order") {
+    const body = await readBody(req);
+    const result = await prepareAxiomExecution(body);
+    return json(res, 200, result);
   }
 
   if (req.method === "POST" && url.pathname === "/reset") {
