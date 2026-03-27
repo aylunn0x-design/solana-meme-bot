@@ -4,6 +4,8 @@
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "build": "npm run build --workspaces",
-    "check": "npm run check --workspaces"
+    "check": "npm run check --workspaces",
+    "build:api": "npm --workspace apps/api run build",
+    "build:signer": "npm --workspace apps/signer run build"
   }
 }

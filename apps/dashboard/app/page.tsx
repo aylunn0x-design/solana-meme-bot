@@ -10,6 +10,8 @@ export default async function Page() {
   const history = data?.history ?? [];
   const decisions = data?.decisions ?? [];
   const signals = data?.signals ?? [];
+  const portfolio = data?.portfolio ?? {};
+  const wallets = data?.trackedWallets ?? [];
   const mode = data?.botStatus?.mode ?? "not connected";
   const status = data?.botStatus?.status ?? "idle";
   const providers = providerData ?? {};
@@ -42,10 +44,10 @@ export default async function Page() {
         </header>
 
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
-          <StatCard label="Open Positions" value={String(positions.length)} />
-          <StatCard label="Unrealized PnL" value={String(data?.totalUnrealizedPnl ?? '—')} />
-          <StatCard label="Decisions" value={String(decisions.length)} />
-          <StatCard label="Signals" value={String(signals.length)} />
+          <StatCard label="Open Positions" value={String(positions.length)} hint={`tracked: ${portfolio.openPositions ?? 0}`} />
+          <StatCard label="Unrealized PnL" value={String(data?.totalUnrealizedPnl ?? '—')} hint={`exposure: ${portfolio.totalExposureUsd ?? 0}`} />
+          <StatCard label="Decisions" value={String(decisions.length)} hint={`history: ${portfolio.historyCount ?? 0}`} />
+          <StatCard label="Signals" value={String(signals.length)} hint={`wallets: ${wallets.length}`} />
         </section>
 
         <section>
@@ -90,7 +92,10 @@ export default async function Page() {
           </div>
         </section>
 
-        <section>
+        <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <Section title="Tracked Wallets">
+            {wallets.length ? <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{JSON.stringify(wallets, null, 2)}</pre> : <EmptyState text="No tracked wallets added yet." />}
+          </Section>
           <Section title="Bot Controls" right={<span style={{ color: '#64748b', fontSize: 12 }}>API: {apiUrl}</span>}>
             <Controls
               apiUrl={apiUrl}
