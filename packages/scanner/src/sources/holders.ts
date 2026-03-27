@@ -1,9 +1,20 @@
 import type { SignalScanResult } from "../../../shared/src/types.js";
+import { scannerConfig } from "../config.js";
+import { fetchJson } from "../fetchJson.js";
 
 export async function scanHolderSource(): Promise<SignalScanResult> {
+  if (!scannerConfig.holderFeedUrl) {
+    return {
+      source: "holders",
+      scannedAt: new Date().toISOString(),
+      signals: [],
+    };
+  }
+
+  const data = await fetchJson<SignalScanResult>(scannerConfig.holderFeedUrl);
   return {
     source: "holders",
     scannedAt: new Date().toISOString(),
-    signals: [],
+    signals: data.signals ?? [],
   };
 }
