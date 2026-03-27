@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { calculateUnrealizedPnl } from "../../../packages/portfolio/src/index.js";
 import { state } from "./state.js";
+import { runPaperDecision } from "./engine.js";
 
 function json(res: ServerResponse, status: number, data: unknown) {
   res.statusCode = status;
@@ -72,6 +73,13 @@ export async function handleRoute(req: IncomingMessage, res: ServerResponse, url
     const body = await readBody(req);
     state.riskLimits = { ...state.riskLimits, ...body };
     return json(res, 200, { ok: true, limits: state.riskLimits });
+  }
+
+
+  if (req.method === "POST" && url.pathname === "/execute-paper") {
+    const body = await readBody(req);
+    const result = runPaperDecision(body.decision, Number(body.price ?? 0));
+    return json(res, result.ok ? 200 : 400, result);
   }
 
   if (req.method === "POST" && url.pathname === "/reset") {
