@@ -1,14 +1,17 @@
 import { EmptyState, Section, StatCard, cardStyle } from "./components";
-import { getDashboardData } from "./lib/api";
+import { Controls } from "./Controls";
+import { getApiBase, getBacktestData, getDashboardData } from "./lib/api";
 
 export default async function Page() {
   const data = await getDashboardData();
+  const backtest = await getBacktestData();
   const positions = data?.positions ?? [];
   const history = data?.history ?? [];
   const decisions = data?.decisions ?? [];
   const signals = data?.signals ?? [];
   const mode = data?.botStatus?.mode ?? "not connected";
   const status = data?.botStatus?.status ?? "idle";
+  const apiUrl = getApiBase();
 
   return (
     <main
@@ -67,6 +70,23 @@ export default async function Page() {
           </div>
         </section>
 
+        <section>
+          <Section title="Bot Controls" right={<span style={{ color: '#64748b', fontSize: 12 }}>API: {apiUrl}</span>}>
+            <Controls
+              apiUrl={apiUrl}
+              defaults={data?.riskLimits ?? {
+                maxPositionSizeUsd: 0,
+                maxDailyLossUsd: 0,
+                maxOpenPositions: 0,
+                minConfidence: 0.8,
+                minLiquidityUsd: 25000,
+                maxHolderConcentrationPct: 20,
+                allowLiveTrading: false,
+              }}
+            />
+          </Section>
+        </section>
+
         <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <Section title="Trade History">
             {history.length ? <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{JSON.stringify(history.slice(0, 10), null, 2)}</pre> : <EmptyState text="Executed trades and paper fills will show here once connected." />}
@@ -78,7 +98,18 @@ export default async function Page() {
 
         <section>
           <Section title="Backtest Summary">
-            <EmptyState text="Backtest results will show here once replay data is connected." />
+            {backtest?.summary ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: 12 }}>
+                <StatCard label="Trades" value={String(backtest.summary.trades)} hint="Replay trades" />
+                <StatCard label="Wins" value={String(backtest.summary.wins)} hint="Winning trades" />
+                <StatCard label="Losses" value={String(backtest.summary.losses)} hint="Losing trades" />
+                <StatCard label="Win Rate" value={String(backtest.summary.winRate)} hint="As decimal" />
+                <StatCard label="Total PnL" value={String(backtest.summary.totalPnlUsd)} hint="USD" />
+                <StatCard label="Max Drawdown" value={String(backtest.summary.maxDrawdownUsd)} hint="USD" />
+              </div>
+            ) : (
+              <EmptyState text="Backtest results will show here once replay data is connected." />
+            )}
           </Section>
         </section>
       </div>
