@@ -75,6 +75,12 @@ export default async function Page() {
             {signals.length ? <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{JSON.stringify(signals.slice(0, 10), null, 2)}</pre> : <EmptyState text="Twitter, wallet, holder, and narrative signals will show here when ingestion is wired." />}
           </Section>
         </section>
+
+        <section>
+          <Section title="Backtest Summary">
+            <EmptyState text="Backtest results will show here once replay data is connected." />
+          </Section>
+        </section>
       </div>
     </main>
   );

@@ -26,6 +26,7 @@ Automated Solana memecoin trading system with scanning, scoring, execution, risk
 - paper execution
 - dashboard shell
 - API endpoints for positions / pnl / history / signals
+- backtest/replay foundation
 
 ### v2
 - live Solana execution

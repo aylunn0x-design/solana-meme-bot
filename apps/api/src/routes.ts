@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { calculateUnrealizedPnl } from "../../../packages/portfolio/src/index.js";
 import { state } from "./state.js";
 import { runScanAndScoreCycle } from "./scan.js";
+import { getBacktestResults } from "./backtest.js";
 import { runPaperDecision } from "./engine.js";
 
 function json(res: ServerResponse, status: number, data: unknown) {
@@ -81,6 +82,10 @@ export async function handleRoute(req: IncomingMessage, res: ServerResponse, url
   if (req.method === "POST" && url.pathname === "/scan") {
     const result = await runScanAndScoreCycle();
     return json(res, 200, { ok: true, ...result });
+  }
+
+  if (req.method === "GET" && url.pathname === "/backtest") {
+    return json(res, 200, getBacktestResults());
   }
 
   if (req.method === "POST" && url.pathname === "/execute-paper") {
