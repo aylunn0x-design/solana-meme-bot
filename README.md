@@ -12,6 +12,7 @@ Automated Solana memecoin trading system with scanning, scoring, execution, risk
 ## Architecture
 - `apps/api` — bot API and worker entrypoints
 - `apps/dashboard` — web dashboard for positions / pnl / history
+- `apps/signer` — separate signer service scaffold
 - `packages/scanner` — tweet, wallet, holder, narrative ingestion
 - `packages/scoring` — signal scoring and decision logic
 - `packages/execution` — buy/sell execution adapters
@@ -28,6 +29,8 @@ Automated Solana memecoin trading system with scanning, scoring, execution, risk
 - API endpoints for positions / pnl / history / signals
 - backtest/replay foundation
 - Axiom adapter prep layer
+- provider connectivity checks
+- signer + Jupiter live execution prep
 
 ### v2
 - live Solana execution
