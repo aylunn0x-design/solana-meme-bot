@@ -3,6 +3,8 @@ export const scannerConfig = {
   walletFeedUrl: process.env.WALLET_FEED_URL || "",
   holderFeedUrl: process.env.HOLDER_FEED_URL || "",
   liquidityFeedUrl: process.env.LIQUIDITY_FEED_URL || "",
+  birdeyeApiKey: process.env.BIRDEYE_API_KEY || "",
+  heliusApiKey: process.env.HELIUS_API_KEY || "",
 };
 
 export function hasScannerConfig() {
