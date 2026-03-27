@@ -101,6 +101,18 @@ export async function handleRoute(req: IncomingMessage, res: ServerResponse, url
     return json(res, 200, result);
   }
 
+  if (req.method === "POST" && url.pathname === "/prepare-live-buy") {
+    const body = await readBody(req);
+    const result = await prepareLiveBuy(body);
+    return json(res, result.ok ? 200 : 400, result);
+  }
+
+  if (req.method === "POST" && url.pathname === "/execute-live-swap") {
+    const body = await readBody(req);
+    const result = await executePreparedSwap(body);
+    return json(res, result.ok ? 200 : 400, result);
+  }
+
   if (req.method === "POST" && url.pathname === "/reset") {
     state.signals = [];
     state.decisions = [];
