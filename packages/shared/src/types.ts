@@ -29,4 +29,15 @@ export interface RiskLimits {
   maxDailyLossUsd: number;
   maxOpenPositions: number;
   allowLiveTrading: boolean;
+  minConfidence: number;
+  minLiquidityUsd: number;
+  maxHolderConcentrationPct: number;
+}
+
+export interface SizingInput {
+  confidence: number;
+  liquidityUsd: number;
+  holderConcentrationPct: number;
+  currentExposureUsd: number;
+  maxPositionSizeUsd: number;
 }

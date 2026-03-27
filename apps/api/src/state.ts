@@ -16,5 +16,8 @@ export const state: {
     maxDailyLossUsd: 0,
     maxOpenPositions: 0,
     allowLiveTrading: false,
+    minConfidence: 0.8,
+    minLiquidityUsd: 25000,
+    maxHolderConcentrationPct: 20,
   },
 };
