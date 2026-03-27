@@ -1,4 +1,4 @@
-export type SignalSource = "twitter" | "wallet" | "holders" | "volume" | "narrative";
+export type SignalSource = "twitter" | "wallet" | "holders" | "volume" | "narrative" | "claims";
 
 export interface TokenSignal {
   mint: string;
@@ -7,6 +7,18 @@ export interface TokenSignal {
   score: number;
   reason: string;
   timestamp: string;
+  liquidityUsd?: number;
+  volumeUsd24h?: number;
+  holderConcentrationPct?: number;
+  walletLabel?: string;
+  narrativeTag?: string;
+  tweetUrl?: string;
+}
+
+export interface SignalScanResult {
+  signals: TokenSignal[];
+  scannedAt: string;
+  source: SignalSource;
 }
 
 export interface Position {
