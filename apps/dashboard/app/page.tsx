@@ -1,16 +1,18 @@
 import { EmptyState, Section, StatCard, cardStyle } from "./components";
 import { Controls } from "./Controls";
-import { getApiBase, getBacktestData, getDashboardData } from "./lib/api";
+import { getApiBase, getBacktestData, getDashboardData, getProviderData } from "./lib/api";
 
 export default async function Page() {
   const data = await getDashboardData();
   const backtest = await getBacktestData();
+  const providerData = await getProviderData();
   const positions = data?.positions ?? [];
   const history = data?.history ?? [];
   const decisions = data?.decisions ?? [];
   const signals = data?.signals ?? [];
   const mode = data?.botStatus?.mode ?? "not connected";
   const status = data?.botStatus?.status ?? "idle";
+  const providers = providerData ?? {};
   const apiUrl = getApiBase();
 
   return (
@@ -44,6 +46,24 @@ export default async function Page() {
           <StatCard label="Unrealized PnL" value={String(data?.totalUnrealizedPnl ?? '—')} />
           <StatCard label="Decisions" value={String(decisions.length)} />
           <StatCard label="Signals" value={String(signals.length)} />
+        </section>
+
+        <section>
+          <Section title="Provider Status">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 12 }}>
+              {['birdeye','helius','dexscreener'].map((name) => {
+                const p = providers?.[name];
+                return (
+                  <div key={name} style={{ border: '1px solid rgba(255,255,255,.08)', borderRadius: 14, padding: 14 }}>
+                    <div style={{ fontWeight: 800, textTransform: 'capitalize' }}>{name}</div>
+                    <div style={{ fontSize: 13, color: p?.ok ? '#5eead4' : '#fca5a5', marginTop: 6 }}>{p?.ok ? 'connected' : 'not ready'}</div>
+                    <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 6 }}>count: {p?.count ?? 0}</div>
+                    {p?.error ? <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 8 }}>{p.error}</div> : null}
+                  </div>
+                );
+              })}
+            </div>
+          </Section>
         </section>
 
         <section style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16 }}>

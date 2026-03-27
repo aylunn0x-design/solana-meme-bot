@@ -109,6 +109,10 @@ export async function handleRoute(req: IncomingMessage, res: ServerResponse, url
     return json(res, 200, { ok: true });
   }
 
+  if (req.method === "GET" && url.pathname === "/providers") {
+    return json(res, 200, await testProviders());
+  }
+
   if (req.method === "GET" && url.pathname === "/dashboard") {
     const positions = state.positions.map((position) => ({
       ...position,

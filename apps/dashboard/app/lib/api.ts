@@ -4,9 +4,9 @@ export function getApiBase() {
   return base;
 }
 
-export async function getDashboardData() {
+async function getJson(path: string) {
   try {
-    const res = await fetch(`${base}/dashboard`, { cache: "no-store" });
+    const res = await fetch(`${base}${path}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   } catch {
@@ -14,12 +14,14 @@ export async function getDashboardData() {
   }
 }
 
+export async function getDashboardData() {
+  return getJson("/dashboard");
+}
+
 export async function getBacktestData() {
-  try {
-    const res = await fetch(`${base}/backtest`, { cache: "no-store" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch {
-    return null;
-  }
+  return getJson("/backtest");
+}
+
+export async function getProviderData() {
+  return getJson("/providers");
 }
