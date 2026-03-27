@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { calculateUnrealizedPnl } from "../../../packages/portfolio/src/index.js";
-import { mockDecisions, mockHistory, mockPositions, mockRiskLimits, mockSignals } from "./mockData.js";
+import { state } from "./state.js";
 
 function json(res: ServerResponse, status: number, data: unknown) {
   res.statusCode = status;
@@ -16,15 +16,15 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   }
 
   if (url.pathname === "/signals") {
-    return json(res, 200, { items: mockSignals });
+    return json(res, 200, { items: state.signals });
   }
 
   if (url.pathname === "/decisions") {
-    return json(res, 200, { items: mockDecisions });
+    return json(res, 200, { items: state.decisions });
   }
 
   if (url.pathname === "/positions") {
-    const items = mockPositions.map((position) => ({
+    const items = state.positions.map((position) => ({
       ...position,
       unrealizedPnl: calculateUnrealizedPnl(position),
     }));
@@ -32,15 +32,15 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   }
 
   if (url.pathname === "/history") {
-    return json(res, 200, { items: mockHistory });
+    return json(res, 200, { items: state.history });
   }
 
   if (url.pathname === "/risk") {
-    return json(res, 200, { limits: mockRiskLimits });
+    return json(res, 200, { limits: state.riskLimits });
   }
 
   if (url.pathname === "/dashboard") {
-    const positions = mockPositions.map((position) => ({
+    const positions = state.positions.map((position) => ({
       ...position,
       unrealizedPnl: calculateUnrealizedPnl(position),
     }));
@@ -48,15 +48,15 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
 
     return json(res, 200, {
       botStatus: {
-        mode: mockRiskLimits.allowLiveTrading ? "live" : "paper",
-        status: "active",
+        mode: state.riskLimits.allowLiveTrading ? "live" : "paper",
+        status: "idle",
       },
-      signals: mockSignals,
-      decisions: mockDecisions,
+      signals: state.signals,
+      decisions: state.decisions,
       positions,
-      history: mockHistory,
+      history: state.history,
       totalUnrealizedPnl,
-      riskLimits: mockRiskLimits,
+      riskLimits: state.riskLimits,
     });
   }
 

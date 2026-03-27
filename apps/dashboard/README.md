@@ -9,4 +9,4 @@ Planned dashboard views:
 - wallet / exposure view
 - settings and kill switch
 
-Next step: connect this app to the mock API endpoints so the dashboard becomes live.
+Next step: connect this app to the real API endpoints so the dashboard becomes live.
